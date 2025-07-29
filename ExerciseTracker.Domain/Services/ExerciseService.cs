@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using AutoMapper;
+﻿using AutoMapper;
 using ExerciseTracker.Core.DTOs;
 using ExerciseTracker.Core.Extensions;
 using ExerciseTracker.Core.Models;
@@ -13,6 +12,7 @@ namespace ExerciseTracker.Domain.Services;
 public class ExerciseService : IExerciseService
 {
     private readonly IExerciseRepository _repository;
+    private readonly IExerciserRepository _exerciserRepository;
     private readonly ILogger<ExerciseService> _logger;
     private readonly IMapper _mapper;
     private readonly IValidator<CreateExerciseRequest> _createExerciseValidator;
@@ -20,12 +20,14 @@ public class ExerciseService : IExerciseService
 
     public ExerciseService(
         IExerciseRepository repository,
+        IExerciserRepository exerciserRepository,
         ILogger<ExerciseService> logger,
         IMapper mapper,
         IValidator<CreateExerciseRequest> createExerciseValidator,
         IValidator<UpdateExerciseRequest> updateExerciseValidator)
     {
         _repository = repository;
+        _exerciserRepository = exerciserRepository;
         _logger = logger;
         _mapper = mapper;
         _createExerciseValidator = createExerciseValidator;
@@ -41,6 +43,12 @@ public class ExerciseService : IExerciseService
             var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
             return _logger.LogErrorAndReturnFail(errorMessage);
         }
+
+        var exerciserExistsResult =
+            await _exerciserRepository.GetExerciserByIdAsync(request.ExerciserId, cancellationToken);
+
+        if (!exerciserExistsResult.IsSuccess)
+            return _logger.LogErrorAndReturnFail($"Exerciser with Id {request.ExerciserId} does not exist.");
 
         var exercise = _mapper.Map<Exercise>(request);
 
@@ -59,9 +67,6 @@ public class ExerciseService : IExerciseService
 
         if (request.Id <= 0)
             return _logger.LogErrorAndReturnFail("Exercise id is required for update.");
-
-        if (request.ExerciserId <= 0)
-            return _logger.LogErrorAndReturnFail("Exerciser id is required for update");
 
         var existingExerciseResult = await _repository.GetExerciseByIdAsync(request.Id, cancellationToken);
 
@@ -104,7 +109,7 @@ public class ExerciseService : IExerciseService
         var validExercisesResult = await _repository.GetExercisesByExerciserIdAsync(exerciserId, cancellationToken);
 
         if (!validExercisesResult.IsSuccess)
-            _logger.LogErrorAndReturnFail<IReadOnlyList<ExerciseDto>>($"{validExercisesResult.ErrorMessage}");
+           return _logger.LogErrorAndReturnFail<IReadOnlyList<ExerciseDto>>($"{validExercisesResult.ErrorMessage}");
 
         var exercises = validExercisesResult.Value!;
 
@@ -118,7 +123,7 @@ public class ExerciseService : IExerciseService
         var validExercisesResult = await _repository.GetExercisesAsync(cancellationToken);
 
         if (!validExercisesResult.IsSuccess)
-            _logger.LogErrorAndReturnFail<IReadOnlyList<ExerciseDto>>($"{validExercisesResult.ErrorMessage}");
+            return _logger.LogErrorAndReturnFail<IReadOnlyList<ExerciseDto>>($"{validExercisesResult.ErrorMessage}");
 
         var exercises = validExercisesResult.Value!;
 
