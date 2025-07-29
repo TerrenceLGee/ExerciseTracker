@@ -1,4 +1,6 @@
-﻿namespace ExerciseTracker.Core.DTOs;
+﻿using ExerciseTracker.Core.Models;
+
+namespace ExerciseTracker.Core.DTOs;
 
 public class ExerciseDto
 {
@@ -6,7 +8,7 @@ public class ExerciseDto
     public int ExerciserId { get; set; }
     public string ExerciserName { get; set; } = string.Empty;
     public int ExerciserAge { get; set; }
-    public string? ExerciseType { get; set; }
+    public ExerciseType ExerciseType { get; set; }
     public string? Comments { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }

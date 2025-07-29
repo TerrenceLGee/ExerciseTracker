@@ -7,14 +7,17 @@ public class UpdateExerciserRequestValidator : AbstractValidator<UpdateExerciser
 {
     public UpdateExerciserRequestValidator()
     {
+        RuleFor(x => x.Id)
+            .GreaterThan(0).WithMessage("Exerciser id must be greater than 0");
+
         RuleFor(x => x.Name)
-            .NotEmpty().When(x => x.Name != null).WithMessage("Name cannot be empty if provided")
-            .Length(2, 50).When(x => x.Name != null).WithMessage("Name must between 2 and 50 characters if provided");
+            .NotEmpty().When(x => x.Name != null).WithMessage("Name cannot be empty if provided.")
+            .Length(2, 50).When(x => x.Name != null).WithMessage("Name must between 2 and 50 characters if provided.");
 
         RuleFor(x => x.BirthDate)
             .LessThan(DateTime.Today).When(x => x.BirthDate.HasValue)
             .WithMessage("Birth date must be in the past if provided.")
-            .Must(BeAValidBirthDateForUpdate).When(x => x.BirthDate.HasValue).WithMessage("Must be a valid birth date if provided");
+            .Must(BeAValidBirthDateForUpdate).When(x => x.BirthDate.HasValue).WithMessage("Must be a valid birth date if provided.");
 
         RuleFor(x => x.BodyWeight)
             .GreaterThan(0).When(x => x.BodyWeight.HasValue)

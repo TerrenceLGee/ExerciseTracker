@@ -104,6 +104,7 @@ public class ExerciserRepository : IExerciserRepository
         {
             var exerciser = await _context.Exercisers
                 .AsNoTracking()
+                .Include(ex => ex.Exercises)
                 .FirstOrDefaultAsync(ex => ex.Id == id, cancellationToken);
 
             return exerciser is null 
@@ -126,6 +127,7 @@ public class ExerciserRepository : IExerciserRepository
         {
             var exercisers = await _context.Exercisers
                 .AsNoTracking()
+                .Include(ex => ex.Exercises)
                 .ToListAsync();
 
             return Result<IReadOnlyList<Exerciser>>.Ok(exercisers);

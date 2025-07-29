@@ -9,12 +9,12 @@ public class CreateExerciserRequestValidator : AbstractValidator<CreateExerciser
     {
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name cannot be empty.")
-            .Length(2, 50).WithMessage("Name must be between 2 and 50 characters");
+            .Length(2, 50).WithMessage("Name must be between 2 and 50 characters.");
 
         RuleFor(x => x.BirthDate)
             .LessThan(DateTime.Today).WithMessage("Birth date must be in the past.")
             .Must(BeAValidBirthDate).WithMessage("Birth date is not valid.")
-            .NotNull().WithMessage("Birth date is required");
+            .NotNull().WithMessage("Birth date is required.");
 
         RuleFor(x => x.BodyWeight)
             .GreaterThan(0).When(x => x.BodyWeight.HasValue)

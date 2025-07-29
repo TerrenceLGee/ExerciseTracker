@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ExerciseTracker.Core.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExerciseTracker.Core.DTOs;
 
@@ -10,6 +11,7 @@ public class CreateExerciseRequest
     public DateTime StartTime { get; set; }
     [Required]
     public DateTime EndTime { get; set; }
-    public string? ExerciseType { get; set; }
+
+    [Required] public ExerciseType ExerciseType { get; set; }
     public string? Comments { get; set; }
 }
