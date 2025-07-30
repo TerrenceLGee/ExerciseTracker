@@ -5,15 +5,15 @@ namespace ExerciseTracker.Presentation.Options;
 public enum MenuOption
 {
     [Display(Name = "Add an user to the system")]
-    AddUser,
+    AddExerciser,
     [Display(Name = "Update a user")]
-    UpdateUser,
+    UpdateExerciser,
     [Display(Name = "Delete a user")]
-    DeleteUser,
+    DeleteExerciser,
     [Display(Name = "View detailed information for user based on id")]
-    GetUserById,
+    GetExerciserById,
     [Display(Name = "View all users in the system")]
-    GetAllUsers,
+    GetAllExercisers,
     [Display(Name = "Track an exercise session")]
     CreateExerciseTracker,
     [Display(Name = "Update an exercise session")]
@@ -23,7 +23,7 @@ public enum MenuOption
     [Display(Name = "View detailed information for an exercise session based on id")]
     GetExerciseTrackerById,
     [Display(Name = "View all exercise sessions of a particular user")]
-    GetExerciseTrackersByUserId,
+    GetExerciseTrackersByExerciserId,
     [Display(Name = "View all exercises sessions in the system")]
     GetAllExerciseTrackers,
     [Display(Name = "Exit the program")]

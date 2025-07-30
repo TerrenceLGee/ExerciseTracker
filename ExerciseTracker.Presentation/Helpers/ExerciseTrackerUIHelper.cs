@@ -61,4 +61,11 @@ public static class ExerciseTrackerUIHelper
 
         return true;
     }
+
+    public static void Pause()
+    {
+        DisplayMessage("Press any key to return to the main menu", "grey");
+        Console.ReadKey();
+        AnsiConsole.Clear();
+    }
 }
