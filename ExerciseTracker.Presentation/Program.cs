@@ -9,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Serilog;
 using AutoMapper;
+using ExerciseTracker.Core.DTOs;
+using ExerciseTracker.Core.Models;
+using ExerciseTracker.Domain.Validation;
+using FluentValidation;
 using Serilog.Parsing;
 
 LoggingSetup();
@@ -45,7 +49,11 @@ async Task Startup()
         .AddTransient<IExerciserService, ExerciserService>()
         .AddTransient<IExerciseService, ExerciseService>()
         .AddTransient<IExerciseTrackerUI, ExerciseTrackerUI>()
-        .AddAutoMapper(typeof(CoreMappingProfile));
+        .AddValidatorsFromAssemblyContaining<CreateExerciserRequestValidator>()
+        .AddValidatorsFromAssemblyContaining<CreateExerciseRequestValidator>()
+        .AddValidatorsFromAssemblyContaining<UpdateExerciserRequestValidator>()
+        .AddValidatorsFromAssemblyContaining<UpdateExerciseRequestValidator>()
+        .AddAutoMapper(cfg => { }, typeof(CoreMappingProfile));
 
     var serviceProvider = services.BuildServiceProvider();
 

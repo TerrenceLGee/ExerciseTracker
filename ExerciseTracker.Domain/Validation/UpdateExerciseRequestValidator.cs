@@ -11,9 +11,6 @@ public class UpdateExerciseRequestValidator : AbstractValidator<UpdateExerciseRe
         RuleFor(x => x.Id)
             .GreaterThan(0).WithMessage("Exercise id must be greater than 0");
 
-        RuleFor(x => x.ExerciserId)
-            .GreaterThan(0).WithMessage("Exerciser id must be greater than 0");
-
         RuleFor(x => x.StartTime)
             .LessThanOrEqualTo(DateTime.Now)
             .When(x => x.StartTime.HasValue)

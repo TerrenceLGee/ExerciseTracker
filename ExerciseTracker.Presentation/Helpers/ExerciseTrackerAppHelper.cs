@@ -63,10 +63,10 @@ public static class ExerciseTrackerAppHelper
     {
         CultureInfo info = CultureInfo.InvariantCulture;
 
-        if (!ExerciseTrackerUIValidator.IsValidDateString(dateString, dateFormat, info))
+        if (!ExerciseTrackerUIValidator.IsValidDateString(dateString!, dateFormat, info))
             return Result<DateTime?>.Fail($"Invalid date, date must match format: {dateFormat}");
 
-        var validTime = DateTime.ParseExact(dateString, dateFormat, info);
+        var validTime = DateTime.ParseExact(dateString!, dateFormat, info);
 
         return Result<DateTime?>.Ok(validTime);
     }
