@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using ExerciseTracker.Core.DTOs;
+﻿using ExerciseTracker.Core.DTOs;
 using ExerciseTracker.Core.Models;
 using ExerciseTracker.Domain.Services;
 using ExerciseTracker.Presentation.Helpers;
@@ -142,7 +141,7 @@ public class ExerciseTrackerUI : IExerciseTrackerUI
             : null;
 
         var birthDateString = ExerciseTrackerUIHelper.GetOptionalInput("Do you wish to update the birth date? ")
-            ? ExerciseTrackerUIHelper.GetInput<string?>($"Enter updated birth date in format {DateFormat}: ")
+            ? ExerciseTrackerUIHelper.GetInput<string?>($"Enter updated birth date in format {BirthDateFormat}: ")
             : null;
 
         var bodyWeight = ExerciseTrackerUIHelper.GetOptionalInput("Do you wish to update the body weight? ")
@@ -161,10 +160,15 @@ public class ExerciseTrackerUI : IExerciseTrackerUI
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        var birthDateResult = ExerciseTrackerAppHelper.BuildUpdateDateTime(birthDateString, BirthDateFormat);
+        DateTime? birthDate = null;
 
-        if (ExerciseTrackerAppHelper.IsFailure(birthDateResult, out var birthDate))
-            return;
+        if (birthDateString is not null)
+        {
+            var birthDateResult = ExerciseTrackerAppHelper.BuildUpdateDateTime(birthDateString, BirthDateFormat);
+
+            if (ExerciseTrackerAppHelper.IsFailure(birthDateResult, out birthDate))
+                return;
+        }
 
         var updatedExerciser =
             ExerciseTrackerAppHelper.BuildUpdateExerciserRequest(exerciserId, name, birthDate, bodyWeight, fitnessGoal);
@@ -264,7 +268,7 @@ public class ExerciseTrackerUI : IExerciseTrackerUI
             return;
 
         var startTimeDateString =
-            ExerciseTrackerUIHelper.GetInput<string>($"Enter exercise session start time in format {DateFormat}: ");
+            ExerciseTrackerUIHelper.GetInput<string>($"Enter exercise session start time in format {DateFormat} (24 hour clock: 0-23): ");
 
         var startTimeResult = ExerciseTrackerAppHelper.BuildDateTime(startTimeDateString, DateFormat);
 
@@ -272,7 +276,7 @@ public class ExerciseTrackerUI : IExerciseTrackerUI
             return;
 
         var endTimeDateString =
-            ExerciseTrackerUIHelper.GetInput<string>($"Enter exercise session end time in format {DateFormat}: ");
+            ExerciseTrackerUIHelper.GetInput<string>($"Enter exercise session end time in format {DateFormat} (24 hour clock: 0-23): ");
 
         var endTimeResult = ExerciseTrackerAppHelper.BuildDateTime(endTimeDateString, DateFormat);
 
@@ -332,22 +336,32 @@ public class ExerciseTrackerUI : IExerciseTrackerUI
             $"Updating tracked exercise session# {id} for user# {session.ExerciserId}\n");
 
         var startTimeDateString = ExerciseTrackerUIHelper.GetOptionalInput("Do you wish to update the session start time? ")
-            ? ExerciseTrackerUIHelper.GetInput<string?>($"Enter updated start time in format {DateFormat}: ")
+            ? ExerciseTrackerUIHelper.GetInput<string?>($"Enter updated start time in format {DateFormat} (24 hour clock: 0-23): ")
             : null;
 
-        var startTimeDateResult = ExerciseTrackerAppHelper.BuildUpdateDateTime(startTimeDateString, DateFormat);
+        DateTime? startTime = null;
 
-        if (ExerciseTrackerAppHelper.IsFailure(startTimeDateResult, out var startTime))
-            return;
+        if (startTimeDateString is not null)
+        {
+            var startTimeDateResult = ExerciseTrackerAppHelper.BuildUpdateDateTime(startTimeDateString, DateFormat);
+
+            if (ExerciseTrackerAppHelper.IsFailure(startTimeDateResult, out startTime))
+                return;
+        }
 
         var endTimeDateString = ExerciseTrackerUIHelper.GetOptionalInput("Do you wish to update the session end time? ")
-            ? ExerciseTrackerUIHelper.GetInput<string?>($"Enter updated end time in format {DateFormat}: ")
+            ? ExerciseTrackerUIHelper.GetInput<string?>($"Enter updated end time in format {DateFormat} (24 hour clock: 0-23): ")
             : null;
 
-        var endTimeDateResult = ExerciseTrackerAppHelper.BuildUpdateDateTime(endTimeDateString, DateFormat);
+        DateTime? endTime = null;
 
-        if (ExerciseTrackerAppHelper.IsFailure(endTimeDateResult, out var endTime))
-            return;
+        if (endTimeDateString is not null)
+        {
+            var endTimeDateResult = ExerciseTrackerAppHelper.BuildUpdateDateTime(endTimeDateString, DateFormat);
+
+            if (ExerciseTrackerAppHelper.IsFailure(endTimeDateResult, out endTime))
+                return;
+        }
 
         ExerciseType? exerciseType = ExerciseTrackerUIHelper.GetOptionalInput("Do you wish to update the exercise type? ")
             ? GetExerciseType()

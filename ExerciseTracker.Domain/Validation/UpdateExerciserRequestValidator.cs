@@ -12,7 +12,7 @@ public class UpdateExerciserRequestValidator : AbstractValidator<UpdateExerciser
 
         RuleFor(x => x.Name)
             .NotEmpty().When(x => x.Name != null).WithMessage("Name cannot be empty if provided.")
-            .Length(2, 50).When(x => x.Name != null).WithMessage("Name must between 2 and 50 characters if provided.");
+            .Length(2, 50).When(x => x.Name != null).WithMessage("Name must be between 2 and 50 characters if provided.");
 
         RuleFor(x => x.BirthDate)
             .LessThan(DateTime.Today).When(x => x.BirthDate.HasValue)

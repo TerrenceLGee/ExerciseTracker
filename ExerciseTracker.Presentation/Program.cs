@@ -1,19 +1,15 @@
-﻿using ExerciseTracker.DataAccess.Data;
+﻿using AutoMapper;
+using ExerciseTracker.DataAccess.Data;
 using ExerciseTracker.DataAccess.Repositories;
-using ExerciseTracker.Domain.Services;
-using ExerciseTracker.Presentation.UI;
 using ExerciseTracker.Domain.MappingProfiles;
+using ExerciseTracker.Domain.Services;
+using ExerciseTracker.Domain.Validation;
+using ExerciseTracker.Presentation.UI;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Serilog;
-using AutoMapper;
-using ExerciseTracker.Core.DTOs;
-using ExerciseTracker.Core.Models;
-using ExerciseTracker.Domain.Validation;
-using FluentValidation;
-using Serilog.Parsing;
 
 LoggingSetup();
 
@@ -44,18 +40,20 @@ async Task Startup()
         .AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true))
         .AddDbContext<ExerciseTrackerDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection")))
-        .AddTransient<IExerciserRepository, ExerciserRepository>()
-        .AddTransient<IExerciseRepository, ExerciseRepository>()
-        .AddTransient<IExerciserService, ExerciserService>()
-        .AddTransient<IExerciseService, ExerciseService>()
-        .AddTransient<IExerciseTrackerUI, ExerciseTrackerUI>()
+        .AddScoped<IExerciserRepository, ExerciserRepository>()
+        .AddScoped<IExerciseRepository, ExerciseRepository>()
+        .AddScoped<IExerciserService, ExerciserService>()
+        .AddScoped<IExerciseService, ExerciseService>()
+        .AddScoped<IExerciseTrackerUI, ExerciseTrackerUI>()
         .AddValidatorsFromAssemblyContaining<CreateExerciserRequestValidator>()
         .AddValidatorsFromAssemblyContaining<CreateExerciseRequestValidator>()
         .AddValidatorsFromAssemblyContaining<UpdateExerciserRequestValidator>()
         .AddValidatorsFromAssemblyContaining<UpdateExerciseRequestValidator>()
-        .AddAutoMapper(cfg => { }, typeof(CoreMappingProfile));
+        .AddAutoMapper(cfg => { }, typeof(CoreMappingProfile).Assembly);
 
     var serviceProvider = services.BuildServiceProvider();
+
+    serviceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
 
     using var tokenSource = new CancellationTokenSource();
 
@@ -92,7 +90,3 @@ void LoggingSetup()
         .CreateLogger();
 
 }
-
-
-
-
