@@ -103,6 +103,7 @@ public class ExerciserRepository : IExerciserRepository
         try
         {
             var exerciser = await _context.Exercisers
+                .AsNoTracking()
                 .Include(ex => ex.Exercises)
                 .FirstOrDefaultAsync(ex => ex.Id == id, cancellationToken);
 
@@ -126,6 +127,7 @@ public class ExerciserRepository : IExerciserRepository
         try
         {
             var exercisers = await _context.Exercisers
+                .AsNoTracking()
                 .Include(ex => ex.Exercises)
                 .ToListAsync();
 
