@@ -24,7 +24,7 @@ public class UpdateExerciserRequestValidator : AbstractValidator<UpdateExerciser
             .WithMessage("Body weight must be greater than 0 if provided.");
 
         RuleFor(x => x.FitnessGoal)
-            .MaximumLength(200).When(x => x.Name != null).WithMessage("Fitness goal cannot exceed 200 characters if provided.");
+            .MaximumLength(200).When(x => x.FitnessGoal != null).WithMessage("Fitness goal cannot exceed 200 characters if provided.");
 
         RuleFor(x => x)
             .Must(request => request.Name != null ||
