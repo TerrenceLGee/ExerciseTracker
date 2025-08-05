@@ -1,4 +1,5 @@
 ﻿using ExerciseTracker.Core.DTOs;
+using ExerciseTracker.Core.Models;
 using FluentValidation;
 
 namespace ExerciseTracker.Domain.Validation;
@@ -23,7 +24,7 @@ public class CreateExerciseRequestValidator : AbstractValidator<CreateExerciseRe
             .When(x => x.StartTime != default && x.EndTime != default);
 
         RuleFor(x => x.ExerciseType)
-            .IsInEnum().WithMessage("Invalid exercise type provided. Must be one of: Weights, Cardio, Yoga, Calisthenics, Other.");
+            .IsInEnum().WithMessage($"Invalid exercise type provided. Must be one of: {string.Join("m ", Enum.GetNames(typeof(ExerciseType)))}.");
 
         RuleFor(x => x.Comments)
             .NotEmpty().When(x => x.Comments != null).WithMessage("Comments cannot be empty if provided.")
