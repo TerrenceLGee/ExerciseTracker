@@ -129,7 +129,7 @@ public class ExerciserRepository : IExerciserRepository
             var exercisers = await _context.Exercisers
                 .AsNoTracking()
                 .Include(ex => ex.Exercises)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return Result<IReadOnlyList<Exerciser>>.Ok(exercisers);
         }
